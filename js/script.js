@@ -98,10 +98,6 @@
 			cells[i].draw();
 		}
 
-		ctx.fillStyle = "#F33";
-		ctx.font = "30px Arial";
-		ctx.fillText("Width: " + width + "; Height: " + height, 10, 30);
-		ctx.fillText("X: " + mouse.x + "; Y: " + mouse.y, 10, 60);
 		cells.forEach((i, pos) => {
 			i.update(pos);
 		});
