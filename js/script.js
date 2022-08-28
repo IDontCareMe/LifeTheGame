@@ -219,9 +219,11 @@
 			// Run/create mode
 			case 'Space': if(gameMode == CREATE) {
 								gameMode = RUN;
+								document.title = "RUN mode";
 								//button pressed
 							} else if (gameMode == RUN) {
 								gameMode = CREATE;
+								document.title = "CREATIVE mode";
 								//button unpressed
 							}
 							break;
