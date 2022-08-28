@@ -1,5 +1,6 @@
 (() => {
 	const VERSION = "0.0a";
+	const font = "20px 'Comic Sans MS'";
 	const CREATE = 0;
 	const RUN = 1;
 
@@ -15,10 +16,6 @@
 	let amount = col * row;
 
 	let gameMode = CREATE;
-
-	//show/hide flags
-	let showVersion = false;
-	let showHelpMenu = true;
 
 	let mouse = {
 		x: undefined,
@@ -74,6 +71,57 @@
 		}
 	}
 
+	// HelpMenu class
+	class HelpMenu {
+		constructor(x, y, width, height, bgColor, font, fontColor) {
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.height = height;
+			this.bgColor = bgColor;
+			this.font = font;
+			this.fontColor = fontColor;
+			this.show = true;
+		}
+
+		draw() {
+			// draw rect
+			ctx.fillStyle = this.bgColor;
+			ctx.fillRect(this.x, this.y, this.width, this.height);
+			// draw text
+			ctx.fillStyle = this.fontColor;
+			ctx.strokeStyle = this.fontColor;
+			ctx.font = this.font;
+			ctx.fillText("Hot keys: ", this.x + 10, this.y + 20);
+			ctx.moveTo(this.x + 10, this.y + 30);
+			ctx.lineTo(this.x + this.width - 10, this.y + 30);
+			ctx.stroke();
+			ctx.fillText("-Run the game/creative mode: 'SPACE BAR'", this.x + 10, this.y + 50);
+			ctx.fillText("-Clear world: 'c'", this.x + 10, this.y + 80);
+			ctx.fillText("-Show/Hide help menu (this menu): 'h'", this.x + 10, this.y + 110);
+			ctx.fillText("-Show/Hide version label: 'v'", this.x + 10, this.y + 140);
+			ctx.fillText("Version: " + version.version, this.x + this.width - 130, this.y + this.height - 10);
+		}
+	}
+
+	// Version label class
+	class VersionLabel {
+		constructor(x, y, version, font, fontColor) {
+			this.x = x;
+			this.y = y;
+			this.version = version;
+			this.font = font;
+			this.fontColor = fontColor;
+			this.show = false;
+		}
+
+		draw() {
+			ctx.fillStyle = this.fontColor;
+			ctx.font = this.font;
+			ctx.fillText("Version: " + this.version, this.x, this.y);
+		}
+	}
+
 	// Create cells
 	let cells = [];
 	for(let i = 0; i < width/cellSize; i++) {
@@ -84,13 +132,28 @@
 		}
 	}
 
-	function random(min, max) {
-		return Math.random() * (max - min) + min;
-	}
+	// Create helpMenu object
+	let helpMenu = new HelpMenu(
+								Math.floor(width * 0.1),
+								Math.floor(height * 0.1),
+								Math.floor(width * 0.8),
+								Math.floor(height * 0.8),
+								"rgba(120, 142, 158, 0.8)",
+								font,
+								"#EEE"
+								);
+
+	// Create version label
+	let version = new VersionLabel(
+									width - 130,
+									height - 10,
+									VERSION,
+									font,
+									"#788E9E"
+									);
 
 	// clearScreen function clears screen by filling it with specific color
 	function clearScreen() {
-		//ctx.clearRect(0, 0, width, height);
 		if (gameMode == RUN) {
 			ctx.fillStyle = "#FFC9C9";
 		} else {
@@ -99,23 +162,11 @@
 		ctx.fillRect(0, 0, width, height);
 	}
 
-	// drawVersion draws current version of game
-	function drawVersion(color, x, y) {
-		//#788E9E
-		ctx.fillStyle = color;
-		ctx.font = "20px 'Comic Sans MS'";
-		ctx.fillText("Version: " + VERSION, x, y);
-	}
-
-	// drawHelpMenu draws menu with tips & hot keys
-	function drawHelpMenu() {
-		//draw rect
-		let menuWidth = Math.floor(width * 0.8);
-		let meunHeight = Math.floor(height * 0.8);
-		let menuX = Math.floor(width * 0.1);
-		let meunY = Math.floor(height * 0.1);
-		ctx.fillStyle = "rgba(120, 142, 158, 0.8)";
-		ctx.fillRect(menuX, meunY, menuWidth, meunHeight);
+	// clearWorld functions kill all cells. It works only in creative mode(green field)
+	function clearWorld() {
+		cells.forEach(i => {
+			i.alive = false;
+		});
 	}
 
 	function loop() {
@@ -129,19 +180,19 @@
 		});
 		if (gameMode == RUN) {
 			cells.forEach(i => {
-			i.alive = false;
-			if (i.nextTurnAlive) { i.alive = true}
-		});
-		} 
+				i.alive = false;
+				if (i.nextTurnAlive) { i.alive = true}
+			});
+		}; 
 		
 		// draw version
-		if(showVersion) {
-			drawVersion("#788E9E", width - 130, height - 10);
+		if(version.show) {
+			version.draw();
 		}
 
 		// draw help menu
-		if(showHelpMenu) {
-			drawHelpMenu();
+		if(helpMenu.show) {
+			helpMenu.draw();
 		}
 		window.requestAnimationFrame(loop);
 	}
@@ -175,15 +226,14 @@
 							}
 							break;
 			// Show/hide version
-			case 'KeyV': 	showVersion = !showVersion;
+			case 'KeyV': 	version.show = !version.show;
 							break;
 			// Show/hide help menu
-			case 'KeyH': 	showHelpMenu = !showHelpMenu;
+			case 'KeyH': 	helpMenu.show = !helpMenu.show;
 							break;
 			// Clear world
 			case 'KeyC': 	if(gameMode == CREATE) {
-								// call function
-								console.log('clear the world!');
+								clearWorld();
 							}
 							break;
 		}
