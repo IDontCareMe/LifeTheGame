@@ -97,7 +97,7 @@
 			ctx.lineTo(this.x + this.width - 10, this.y + 30);
 			ctx.stroke();
 			ctx.fillText("-Run the game/creative mode: 'SPACE BAR'", this.x + 10, this.y + 50);
-			ctx.fillText("-Clear world: 'c'", this.x + 10, this.y + 80);
+			ctx.fillText("-Clear world: 'c' (works only in creative mode)", this.x + 10, this.y + 80);
 			ctx.fillText("-Show/Hide help menu (this menu): 'h'", this.x + 10, this.y + 110);
 			ctx.fillText("-Show/Hide version label: 'v'", this.x + 10, this.y + 140);
 			ctx.fillText("Version: " + version.version, this.x + this.width - 130, this.y + this.height - 10);
