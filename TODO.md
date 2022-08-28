@@ -9,4 +9,4 @@
 | :heavy_check_mark: | 5. Add version lable at bottom right corner. Displayed when ```"v"``` is pressed | 2022.08.28 |
 | :black_square_button: | 6. Add version lable at help screen and at debug console |  |
 | :black_square_button: | 7. Set up deploy via GitHub Actions |  |
-| :black_square_button: | 8. Add game mode label to title of the page |  |
+| :heavy_check_mark: | 8. Add game mode label to title of the page | 2022.08.28 |
