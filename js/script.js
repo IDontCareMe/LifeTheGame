@@ -1,4 +1,5 @@
 (() => {
+	const VERSION = "0.0a";
 	const CREATE = 0;
 	const RUN = 1;
 
@@ -14,6 +15,10 @@
 	let amount = col * row;
 
 	let gameMode = CREATE;
+
+	//show/hide flags
+	let showVersion = false;
+	let showHelpMenu = true;
 
 	let mouse = {
 		x: undefined,
@@ -69,6 +74,7 @@
 		}
 	}
 
+	// Create cells
 	let cells = [];
 	for(let i = 0; i < width/cellSize; i++) {
 		for(let j = 0; j < height/cellSize; j++){
@@ -82,6 +88,7 @@
 		return Math.random() * (max - min) + min;
 	}
 
+	// clearScreen function clears screen by filling it with specific color
 	function clearScreen() {
 		//ctx.clearRect(0, 0, width, height);
 		if (gameMode == RUN) {
@@ -90,6 +97,25 @@
 			ctx.fillStyle = "#B6CB8B";
 		}
 		ctx.fillRect(0, 0, width, height);
+	}
+
+	// drawVersion draws current version of game
+	function drawVersion(color, x, y) {
+		//#788E9E
+		ctx.fillStyle = color;
+		ctx.font = "20px 'Comic Sans MS'";
+		ctx.fillText("Version: " + VERSION, x, y);
+	}
+
+	// drawHelpMenu draws menu with tips & hot keys
+	function drawHelpMenu() {
+		//draw rect
+		let menuWidth = Math.floor(width * 0.8);
+		let meunHeight = Math.floor(height * 0.8);
+		let menuX = Math.floor(width * 0.1);
+		let meunY = Math.floor(height * 0.1);
+		ctx.fillStyle = "rgba(120, 142, 158, 0.8)";
+		ctx.fillRect(menuX, meunY, menuWidth, meunHeight);
 	}
 
 	function loop() {
@@ -107,9 +133,20 @@
 			if (i.nextTurnAlive) { i.alive = true}
 		});
 		} 
+		
+		// draw version
+		if(showVersion) {
+			drawVersion("#788E9E", width - 130, height - 10);
+		}
+
+		// draw help menu
+		if(showHelpMenu) {
+			drawHelpMenu();
+		}
 		window.requestAnimationFrame(loop);
 	}
 	
+	// Mouse click
 	canvas.addEventListener("click", onClickHandler);
 	function onClickHandler(e) {
 		let x = e.pageX - e.pageX%cellSize;
@@ -135,6 +172,18 @@
 							} else if (gameMode == RUN) {
 								gameMode = CREATE;
 								//button unpressed
+							}
+							break;
+			// Show/hide version
+			case 'KeyV': 	showVersion = !showVersion;
+							break;
+			// Show/hide help menu
+			case 'KeyH': 	showHelpMenu = !showHelpMenu;
+							break;
+			// Clear world
+			case 'KeyC': 	if(gameMode == CREATE) {
+								// call function
+								console.log('clear the world!');
 							}
 							break;
 		}
